@@ -19,6 +19,7 @@ flags.DEFINE_string("output", "./output/output.mp4", "Path to output video")
 flags.DEFINE_float("conf", 0.50, "Confidence threshold")
 flags.DEFINE_integer("blur_id", None, "Class ID to apply Gaussian Blur")
 flags.DEFINE_integer("class_id", None, "Class ID to track")
+flags.DEFINE_string("model", "yolov10x.pt", "Model file to use")
 
 FLAGS = flags.FLAGS
 
@@ -36,7 +37,7 @@ def initialize_video_capture(video_input):
     return cap
 
 def initialize_model():
-    model_path = "./weights/yolov10x.pt"
+    model_path = f"./weights/{FLAGS.model}"
     if not os.path.exists(model_path):
         logger.error(f"Model weights not found at {model_path}")
         raise FileNotFoundError("Model weights file not found")
@@ -152,9 +153,9 @@ def main(_argv):
             cv2.putText(frame, fps_text, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 8)
             
             writer.write(frame)
-            cv2.imshow("YOLOv10 Object tracking", frame)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
+            #cv2.imshow("YOLOv10 Object tracking", frame)
+            #if cv2.waitKey(1) & 0xFF == ord("q"):
+            #    break
         
         logger.info("Class counts:")
         for class_id, count in class_counters.items():
